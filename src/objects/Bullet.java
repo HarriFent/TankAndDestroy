@@ -14,20 +14,23 @@ import tankGame.TankGame;
 public class Bullet extends GameObject {
 
     Rectangle2D drawR = new Rectangle();
-    int lifeCount = 600;
+    int bounceCount = 0;
 
     public Bullet(double x, double y, ID id, TankGame game) {
         super(x, y, id, game);
         w = (int) (SpriteList.bulletSilverSilver_outline.getw() * 0.5);
         h = (int) (SpriteList.bulletSilverSilver_outline.geth() * 0.5);
+        stateTick = 5;
     }
 
     @Override
     public void tick() {
-        if (lifeCount < 1) {
+        if (stateTick > 0) {
+            stateTick--;
+        }
+        if (bounceCount > 2) {
             game.handler.removeObject(this);
         }
-        lifeCount--;
 
         double dx = vel * Math.sin(angle);
         double dy = vel * Math.cos(angle);
@@ -40,11 +43,13 @@ public class Bullet extends GameObject {
                     if (r2.getWidth() < r2.getHeight()) {
                         if ((r2.getX() == object.x) || (r2.getX() + r2.getWidth() == object.x + object.w)) {
                             angle = (2 * Math.PI - angle);
+                            bounceCount++;
                             return;
                         }
                     } else if (r2.getWidth() > r2.getHeight()) {
                         if ((r2.getY() == object.y) || (r2.getY() + r2.getHeight() == object.y + object.h)) {
                             angle = (Math.PI - angle);
+                            bounceCount++;
                             return;
                         }
                     }

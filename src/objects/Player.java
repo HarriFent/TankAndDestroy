@@ -7,7 +7,9 @@ import tankGame.TankGame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
+import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
 
 public class Player extends GameObject {
 
@@ -21,7 +23,7 @@ public class Player extends GameObject {
         w = (int) (SpriteList.tankGreen_outline.getw() * 0.7);
         h = (int) (SpriteList.tankGreen_outline.geth() * 0.7);
         barrelAngle = Math.toRadians(0);
-        angle = Math.toRadians(0);
+        angle = Math.toRadians(135);
     }
 
     @Override
@@ -47,7 +49,22 @@ public class Player extends GameObject {
             bullet.setAngle(barrelAngle + Math.PI);
             bullet.setVel(7);
             game.handler.addObject(bullet);
-            shootCountDown = 50;
+            shootCountDown = 30;
+        }
+
+        for (GameObject obj : game.handler.object) {
+            if (obj.id == ID.BULLET && obj.stateTick == 0) {
+                Rectangle2D r1 = getBounds(angle, x, y, w, h).createIntersection(obj.getBounds(obj.angle, obj.x, obj.y, obj.w, obj.h));
+                if (r1.getWidth() > 0 && r1.getHeight() > 0) {
+                    ExplosionSmoke esmoke = new ExplosionSmoke(x + (w / 2), y + (w / 2), ID.SMOKE, game);
+                    esmoke.collide = false;
+                    game.handler.addObject(esmoke);
+                    game.handler.removeObject(obj);
+                    game.handler.removeObject(this);
+                    game.handler.addObject(new Player(100,100,ID.PLAYER, game));
+                    return;
+                }
+            }
         }
 
         if (vel > 0 || vel < 0) {
@@ -82,7 +99,7 @@ public class Player extends GameObject {
         g2d.drawImage(ss.grabImage(SpriteList.barrelGreen_outline), tx, game);
         Polygon p1 = getPBounds(angle, x, y, w, h);
         g2d.setColor(Color.red);
-        g2d.draw(p1);
+        //g2d.draw(p1);
     }
 
 }
