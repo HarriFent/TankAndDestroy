@@ -1,13 +1,10 @@
 package objects;
 
 import input.SpriteSheet;
-import java.awt.Color;
 import tankGame.ID;
 import tankGame.TankGame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Polygon;
-import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 
@@ -23,7 +20,6 @@ public class Player extends GameObject {
         w = (int) (SpriteList.tankGreen_outline.getw() * 0.7);
         h = (int) (SpriteList.tankGreen_outline.geth() * 0.7);
         barrelAngle = Math.toRadians(0);
-        angle = Math.toRadians(135);
     }
 
     @Override
@@ -47,7 +43,7 @@ public class Player extends GameObject {
             Bullet bullet = new Bullet((x - 10 + (w / 2) - (58 * Math.sin(barrelAngle))), (y - 10 + (w / 2) + (58 * Math.cos(barrelAngle))), ID.BULLET, game);
             bullet.collide = false;
             bullet.setAngle(barrelAngle + Math.PI);
-            bullet.setVel(7);
+            bullet.setVel(10);
             game.handler.addObject(bullet);
             shootCountDown = 30;
         }
@@ -97,9 +93,6 @@ public class Player extends GameObject {
         tx.rotate(barrelAngle, 8.4, 8.4);
         tx.scale(0.7, 0.7);
         g2d.drawImage(ss.grabImage(SpriteList.barrelGreen_outline), tx, game);
-        Polygon p1 = getPBounds(angle, x, y, w, h);
-        g2d.setColor(Color.red);
-        //g2d.draw(p1);
     }
 
 }

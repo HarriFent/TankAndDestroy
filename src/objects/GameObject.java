@@ -56,23 +56,27 @@ public abstract class GameObject {
     public static Polygon getPBounds(double angle, double x, double y, int w, int h) {
         int[] xs = {0, 0, 0, 0};
         int[] ys = {0, 0, 0, 0};
-        for (int i = 1; i < 5; i++) {
-            double z = Math.sqrt(((w * w) + (h * h)));
-            double beta = ((Math.PI / 4) - angle);
-            double x2 = z * Math.cos(beta + (i * (Math.PI / 4)));
-            double y2 = z * Math.sin(beta + (i * (Math.PI / 4)));
-            xs[i - 1] = (int) ((x + (w / 2)) + x2);
-            ys[i - 1] = (int) ((y + (h / 2)) + y2);
+        double x1 = w / 2;
+        double y1 = h / 2;
+        double cenx = x + x1;
+        double ceny = y + y1;
+        double z1 = Math.sqrt(((x1 * x1) + (y1 * y1)));
+
+        for (int i = 0; i < 4; i++) {
+            double beta = Math.atan2(x1, y1) - angle + ((Math.PI / 2) * i);
+            double x2 = z1 * Math.sin(beta);
+            double y2 = z1 * Math.cos(beta);
+            xs[i] = (int) (cenx + x2);
+            ys[i] = (int) (ceny + y2);
         }
         return new Polygon(xs, ys, 4);
     }
 
     public boolean canMove(double angle, double dx, double dy) {
-        Rectangle r1 = getBounds(angle, x + dx, y - dy, w, h);
+        Polygon p1 = getPBounds(angle, x + dx, y - dy, w, h);
         for (GameObject object : game.handler.object) {
             if (object.id != ID.PLAYER && object.collide) {
-                Rectangle2D r2 = r1.createIntersection(object.getBounds());
-                if (r2.getBounds().width > 0 && r2.getBounds().height > 0) {
+                if (p1.intersects(object.getBounds())) {
                     return false;
                 }
             }

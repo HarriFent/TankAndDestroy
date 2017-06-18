@@ -139,7 +139,7 @@ public class TankGame extends Canvas implements Runnable {
                 case LEVELSELECT:
                     g.setColor(new Color(220, 220, 220));
                     g.fillRect(0, 0, screenWidth, screenHeight);
-                    menu.render(g);
+                    menu.render(g, spriteSheet);
                     break;
                 case GAME:
                     g.setColor(new Color(230, 230, 200));
@@ -149,8 +149,8 @@ public class TankGame extends Canvas implements Runnable {
                 case GAMEOVER:
                     break;
             }
-        }catch(Exception e){
-            
+        } catch (Exception e) {
+
         }
         g.dispose();
         bs.show();

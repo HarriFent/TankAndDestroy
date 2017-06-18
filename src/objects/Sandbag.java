@@ -2,6 +2,8 @@ package objects;
 
 import input.SpriteSheet;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import tankGame.ID;
 import tankGame.TankGame;
 
@@ -20,12 +22,15 @@ public class Sandbag extends GameObject {
 
     @Override
     public void render(Graphics g, SpriteSheet ss) {
+        AffineTransform tx = AffineTransform.getTranslateInstance(x, y);
+        tx.rotate(angle, (w / 2), (h / 2));
+        Graphics2D g2d = (Graphics2D) g;
         switch (id) {
             case SANDBAG:
-                g.drawImage(ss.grabImage(SpriteList.sandbagBeige), (int) x, (int) y, game);
+                g2d.drawImage(ss.grabImage(SpriteList.sandbagBeige), tx, game);
                 break;
             case SANDBAG2:
-                g.drawImage(ss.grabImage(SpriteList.sandbagBrown), (int) x, (int) y, game);
+                g2d.drawImage(ss.grabImage(SpriteList.sandbagBrown), tx, game);
                 break;
         }
     }

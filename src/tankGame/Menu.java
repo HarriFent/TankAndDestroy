@@ -1,11 +1,13 @@
 package tankGame;
 
 import input.MouseInput;
+import input.SpriteSheet;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import objects.SpriteList;
 import tankGame.TankGame.GameState;
 
 public class Menu {
@@ -17,16 +19,16 @@ public class Menu {
     public Menu(TankGame game, MouseInput mouseInput) {
         this.game = game;
         this.mouseInput = mouseInput;
-        btnArray.add(new Button(350, 380, 100, 20, "Play", 0));
-        btnArray.add(new Button(350, 410, 100, 20, "Exit", 1));
+        btnArray.add(new Button(10, 10, SpriteList.menuPlay_off, 0));
+        btnArray.add(new Button(10, 72, SpriteList.menuExit_off, 1));
     }
 
-    public void render(Graphics g) {
+    public void render(Graphics g, SpriteSheet ss) {
         GameState state = game.gameState;
         switch (state) {
             case MENU:
                 for (int i = 0; i < btnArray.size(); i++) {
-                    btnArray.get(i).drawButton(g);
+                    btnArray.get(i).drawButton(g, ss, game);
                 }
                 break;
             case LEVELSELECT:
@@ -34,7 +36,7 @@ public class Menu {
                 g.setFont(new Font(Font.DIALOG, 0, 20));
                 g.drawString("Level Select", 10, 30);
                 for (int i = 0; i < btnArray.size(); i++) {
-                    btnArray.get(i).drawButton(g);
+                    btnArray.get(i).drawButton(g, ss, game);
                 }
                 break;
             case GAME:
@@ -54,12 +56,13 @@ public class Menu {
                         btn.mouseOver = true;
                         if (mouseInput.clicked) {
                             //clicked
+                            mouseInput.clicked = false;
                             switch (btn.getIndex()) {
                                 case 0:
                                     game.gameState = GameState.LEVELSELECT;
                                     btnArray.clear();
                                     for (int i = 0; i < 10; i++) {
-                                        btnArray.add(new Button(10 + (45 * i), 40, 40, 40, Integer.toString(i), i));
+                                        btnArray.add(new Button(10 + (70 * i), 40, SpriteList.menuLevel_off, i + 1));
                                     }
                                     return;
                                 case 1:
@@ -77,12 +80,13 @@ public class Menu {
                     if (btn.getBounds().contains(mouseInput.getMousePos())) {
                         btn.mouseOver = true;
                         if (mouseInput.clicked) {
+                            mouseInput.clicked = false;
                             game.gameState = GameState.GAME;
                             switch (btn.getIndex()) {
-                                case 0:
+                                case 1:
                                     game.currentLevel = LevelList.level0;
                                     break;
-                                case 1:
+                                case 2:
                                     game.currentLevel = LevelList.level1;
                                     break;
                                 default:
@@ -107,31 +111,109 @@ public class Menu {
 class Button {
 
     private final int x, y, w, h, index;
-    private final String text;
+    private final SpriteList sprite;
     public boolean mouseOver = false;
 
-    public Button(int x, int y, int w, int h, String text, int index) {
+    public Button(int x, int y, SpriteList sprite, int index) {
         this.index = index;
         this.x = x;
         this.y = y;
-        this.w = w;
-        this.h = h;
-        this.text = text;
+        this.w = sprite.getw();
+        this.h = sprite.geth();
+        this.sprite = sprite;
     }
 
-    public void drawButton(Graphics g) {
+    public void drawButton(Graphics g, SpriteSheet ss, TankGame game) {
         if (mouseOver) {
-            g.setColor(new Color(50, 50, 155));
-            g.fillRoundRect(x, y, w, h, 5, 5);
-            g.setColor(new Color(0, 0, 0));
-            g.drawString(text, x + 5, y + ((h * 3) / 4));
-            g.drawRoundRect(x, y, w, h, 5, 5);
+            switch (sprite) {
+                case menuPlay_off:
+                    g.drawImage(ss.grabImage(SpriteList.menuPlay_on), x, y, game);
+                    break;
+                case menuExit_off:
+                    g.drawImage(ss.grabImage(SpriteList.menuExit_on), x, y, game);
+                    break;
+                case menuLevel_off:
+                    g.drawImage(ss.grabImage(SpriteList.menuLevel_on), x, y, game);
+                    switch (index) {
+                        case 1:
+                            g.drawImage(ss.grabImage(SpriteList.menuNumber_1), x + 10, y + 10, game);
+                            break;
+                        case 2:
+                            g.drawImage(ss.grabImage(SpriteList.menuNumber_2), x + 10, y + 10, game);
+                            break;
+                        case 3:
+                            g.drawImage(ss.grabImage(SpriteList.menuNumber_3), x + 10, y + 10, game);
+                            break;
+                        case 4:
+                            g.drawImage(ss.grabImage(SpriteList.menuNumber_4), x + 10, y + 10, game);
+                            break;
+                        case 5:
+                            g.drawImage(ss.grabImage(SpriteList.menuNumber_5), x + 10, y + 10, game);
+                            break;
+                        case 6:
+                            g.drawImage(ss.grabImage(SpriteList.menuNumber_6), x + 10, y + 10, game);
+                            break;
+                        case 7:
+                            g.drawImage(ss.grabImage(SpriteList.menuNumber_7), x + 10, y + 10, game);
+                            break;
+                        case 8:
+                            g.drawImage(ss.grabImage(SpriteList.menuNumber_8), x + 10, y + 10, game);
+                            break;
+                        case 9:
+                            g.drawImage(ss.grabImage(SpriteList.menuNumber_9), x + 10, y + 10, game);
+                            break;
+                        case 10:
+                            g.drawImage(ss.grabImage(SpriteList.menuNumber_1), x + 10, y + 10, game);
+                            g.drawImage(ss.grabImage(SpriteList.menuNumber_0), x + 30, y + 10, game);
+                            break;
+                    }
+                    break;
+            }
         } else {
-            g.setColor(new Color(150, 150, 255));
-            g.fillRoundRect(x, y, w, h, 5, 5);
-            g.setColor(new Color(0, 0, 0));
-            g.drawString(text, x + 5, y + ((h * 3) / 4));
-            g.drawRoundRect(x, y, w, h, 5, 5);
+            switch (sprite) {
+                case menuPlay_off:
+                    g.drawImage(ss.grabImage(SpriteList.menuPlay_off), x, y, game);
+                    break;
+                case menuExit_off:
+                    g.drawImage(ss.grabImage(SpriteList.menuExit_off), x, y, game);
+                    break;
+                case menuLevel_off:
+                    g.drawImage(ss.grabImage(SpriteList.menuLevel_off), x, y, game);
+                    switch (index) {
+                        case 1:
+                            g.drawImage(ss.grabImage(SpriteList.menuNumber_1), x + 10, y + 10, game);
+                            break;
+                        case 2:
+                            g.drawImage(ss.grabImage(SpriteList.menuNumber_2), x + 10, y + 10, game);
+                            break;
+                        case 3:
+                            g.drawImage(ss.grabImage(SpriteList.menuNumber_3), x + 10, y + 10, game);
+                            break;
+                        case 4:
+                            g.drawImage(ss.grabImage(SpriteList.menuNumber_4), x + 10, y + 10, game);
+                            break;
+                        case 5:
+                            g.drawImage(ss.grabImage(SpriteList.menuNumber_5), x + 10, y + 10, game);
+                            break;
+                        case 6:
+                            g.drawImage(ss.grabImage(SpriteList.menuNumber_6), x + 10, y + 10, game);
+                            break;
+                        case 7:
+                            g.drawImage(ss.grabImage(SpriteList.menuNumber_7), x + 10, y + 10, game);
+                            break;
+                        case 8:
+                            g.drawImage(ss.grabImage(SpriteList.menuNumber_8), x + 10, y + 10, game);
+                            break;
+                        case 9:
+                            g.drawImage(ss.grabImage(SpriteList.menuNumber_9), x + 10, y + 10, game);
+                            break;
+                        case 10:
+                            g.drawImage(ss.grabImage(SpriteList.menuNumber_1), x + 10, y + 10, game);
+                            g.drawImage(ss.grabImage(SpriteList.menuNumber_0), x + 30, y + 10, game);
+                            break;
+                    }
+                    break;
+            }
         }
     }
 
