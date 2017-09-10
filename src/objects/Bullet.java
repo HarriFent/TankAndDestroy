@@ -1,7 +1,6 @@
 package objects;
 
 import input.SpriteSheet;
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -28,9 +27,6 @@ public class Bullet extends GameObject {
         if (stateTick > 0) {
             stateTick--;
         }
-        if (bounceCount > 2) {
-            game.handler.removeObject(this);
-        }
 
         double dx = vel * Math.sin(angle);
         double dy = vel * Math.cos(angle);
@@ -44,12 +40,18 @@ public class Bullet extends GameObject {
                         if ((r2.getX() == object.x) || (r2.getX() + r2.getWidth() == object.x + object.w)) {
                             angle = (2 * Math.PI - angle);
                             bounceCount++;
+                            if (bounceCount > 2) {
+                                game.handler.removeObject(this);
+                            }
                             return;
                         }
                     } else if (r2.getWidth() > r2.getHeight()) {
                         if ((r2.getY() == object.y) || (r2.getY() + r2.getHeight() == object.y + object.h)) {
                             angle = (Math.PI - angle);
                             bounceCount++;
+                            if (bounceCount > 2) {
+                                game.handler.removeObject(this);
+                            }
                             return;
                         }
                     }

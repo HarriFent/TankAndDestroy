@@ -4,8 +4,10 @@ import input.SpriteSheet;
 import tankGame.ID;
 import tankGame.TankGame;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import static objects.Player.getBounds;
 
@@ -54,30 +56,63 @@ public abstract class GameObject {
     }
 
     public static Polygon getPBounds(double angle, double x, double y, int w, int h) {
-        int[] xs = {0, 0, 0, 0};
-        int[] ys = {0, 0, 0, 0};
+        int[] xs = new int[8];
+        int[] ys = new int[8];
         double x1 = w / 2;
         double y1 = h / 2;
         double cenx = x + x1;
         double ceny = y + y1;
-        double z1 = Math.sqrt(((x1 * x1) + (y1 * y1)));
 
-        for (int i = 0; i < 4; i++) {
-            double beta = Math.atan2(x1, y1) - angle + ((Math.PI / 2) * i);
-            double x2 = z1 * Math.sin(beta);
-            double y2 = z1 * Math.cos(beta);
-            xs[i] = (int) (cenx + x2);
-            ys[i] = (int) (ceny + y2);
+        for (int i = 0; i < 8; i++) {
+            switch (i) {
+                case 1:
+                    y = y + y1;
+                    break;
+                case 2:
+                    y = y + y1;
+                    break;
+                case 3:
+                    x = x + x1;
+                    break;
+                case 4:
+                    x = x + x1;
+                    break;
+                case 5:
+                    y = y - y1;
+                    break;
+                case 6:
+                    y = y - y1;
+                    break;
+                case 7:
+                    x = x - x1;
+                    break;
+            }
+            // translate point to origin
+            double tempX = x - cenx;
+            double tempY = y - ceny;
+
+            // now apply rotation
+            double rotatedX = tempX * Math.cos(angle) - tempY * Math.sin(angle);
+            double rotatedY = tempX * Math.sin(angle) + tempY * Math.cos(angle);
+
+            // translate back
+            xs[i] = (int) (rotatedX + cenx);
+            ys[i] = (int) (rotatedY + ceny);
+
         }
-        return new Polygon(xs, ys, 4);
+        return new Polygon(xs, ys, 8);
     }
 
     public boolean canMove(double angle, double dx, double dy) {
         Polygon p1 = getPBounds(angle, x + dx, y - dy, w, h);
         for (GameObject object : game.handler.object) {
             if (object.id != ID.PLAYER && object.collide) {
-                if (p1.intersects(object.getBounds())) {
-                    return false;
+                Polygon p2 = object.getPBounds(object.getAngle(), object.x, object.y, object.w, object.h);
+                for (int i = 0; i < p1.npoints; i++) {
+                    Point cood = new Point(p1.xpoints[i], p1.ypoints[i]);
+                    if (p2.contains(cood)) {
+                        return false;
+                    }
                 }
             }
         }

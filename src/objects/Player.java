@@ -1,12 +1,16 @@
 package objects;
 
 import input.SpriteSheet;
+import java.awt.Color;
 import tankGame.ID;
 import tankGame.TankGame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Polygon;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
+import static objects.GameObject.getPBounds;
 
 public class Player extends GameObject {
 
@@ -57,7 +61,7 @@ public class Player extends GameObject {
                     game.handler.addObject(esmoke);
                     game.handler.removeObject(obj);
                     game.handler.removeObject(this);
-                    game.handler.addObject(new Player(100,100,ID.PLAYER, game));
+                    game.handler.addObject(new Player(100, 100, ID.PLAYER, game));
                     return;
                 }
             }
@@ -93,6 +97,15 @@ public class Player extends GameObject {
         tx.rotate(barrelAngle, 8.4, 8.4);
         tx.scale(0.7, 0.7);
         g2d.drawImage(ss.grabImage(SpriteList.barrelGreen_outline), tx, game);
+
+        double dx = vel * Math.sin(angle);
+        double dy = vel * Math.cos(angle);
+        Polygon p1 = getPBounds(angle, x + dx, y - dy, w, h);
+        g.setColor(Color.red);
+//        for (int i = 0; i < p1.npoints; i++) {
+//            Point cood = new Point(p1.xpoints[i], p1.ypoints[i]);
+//            g.drawOval(cood.x - 3, cood.y - 3, 6, 6);
+//        }
     }
 
 }

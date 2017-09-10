@@ -85,9 +85,9 @@ public class KeyInput extends KeyAdapter {
             } 
             
             if (upPressed) {
-                player.setVel(8);
+                player.setVel(5);
             } else if (downPressed) {
-                player.setVel(-8);
+                player.setVel(-4);
             } else {
                 player.setVel(0);
             }
