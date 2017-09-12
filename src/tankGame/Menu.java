@@ -15,12 +15,11 @@ public class Menu {
     private TankGame game;
     private MouseInput mouseInput;
     private ArrayList<Button> btnArray = new ArrayList<Button>();
+    private int gameOverTime = 0;
 
     public Menu(TankGame game, MouseInput mouseInput) {
         this.game = game;
         this.mouseInput = mouseInput;
-        btnArray.add(new Button(10, 10, SpriteList.menuPlay_off, 0));
-        btnArray.add(new Button(10, 72, SpriteList.menuExit_off, 1));
     }
 
     public void render(Graphics g, SpriteSheet ss) {
@@ -40,7 +39,9 @@ public class Menu {
                 }
                 break;
             case GAME:
-
+                if (game.enemyCount == 0){
+                    g.drawImage(ss.grabImage(SpriteList.menuGame), 0, 0, game);
+                }
                 break;
             default:
                 break;
@@ -51,6 +52,10 @@ public class Menu {
         GameState state = game.gameState;
         switch (state) {
             case MENU:
+                if (btnArray.size() == 0) {
+                    btnArray.add(new Button(10, 10, SpriteList.menuPlay_off, 0));
+                    btnArray.add(new Button(10, 72, SpriteList.menuExit_off, 1));
+                }
                 for (Button btn : btnArray) {
                     if (btn.getBounds().contains(mouseInput.getMousePos())) {
                         btn.mouseOver = true;
@@ -82,6 +87,7 @@ public class Menu {
                         if (mouseInput.clicked) {
                             mouseInput.clicked = false;
                             game.gameState = GameState.GAME;
+                            btnArray.clear();
                             switch (btn.getIndex()) {
                                 case 1:
                                     game.currentLevel = LevelList.level0;
@@ -93,6 +99,7 @@ public class Menu {
                                     break;
                             }
                             game.currentLevel.loadGameObjects(game);
+                            return;
                         }
                     } else {
                         btn.mouseOver = false;
@@ -100,7 +107,16 @@ public class Menu {
                 }
                 break;
             case GAME:
-
+                if (game.enemyCount == 0){
+                    gameOverTime ++;
+                    if (gameOverTime == 100){
+                        game.handler.clearObjects();
+                        game.gameState = GameState.GAMEOVER;
+                    }
+                }
+                break;
+            case GAMEOVER:
+                game.gameState = GameState.MENU;
                 break;
             default:
                 break;

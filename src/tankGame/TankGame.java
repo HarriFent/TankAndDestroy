@@ -33,6 +33,7 @@ public class TankGame extends Canvas implements Runnable {
     public SpriteSheet spriteSheet;
     public GameState gameState = GameState.MENU;
     public static LevelList currentLevel = LevelList.level0;
+    public int enemyCount = 0;
 
     public TankGame() {
         new Window(screenWidth + 6, screenHeight + 29, "Tank Fighter", this);
@@ -142,11 +143,10 @@ public class TankGame extends Canvas implements Runnable {
                     menu.render(g, spriteSheet);
                     break;
                 case GAME:
+                case GAMEOVER:
                     g.setColor(new Color(230, 230, 200));
                     g.fillRect(0, 0, screenWidth, screenHeight);
                     handler.render(g, spriteSheet);
-                    break;
-                case GAMEOVER:
                     break;
             }
         } catch (Exception e) {

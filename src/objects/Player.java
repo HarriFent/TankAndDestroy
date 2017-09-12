@@ -101,7 +101,7 @@ public class Player extends GameObject {
         double dx = vel * Math.sin(angle);
         double dy = vel * Math.cos(angle);
         Polygon p1 = getPBounds(angle, x + dx, y - dy, w, h);
-        g.setColor(Color.red);
+//        g.setColor(Color.red);
 //        for (int i = 0; i < p1.npoints; i++) {
 //            Point cood = new Point(p1.xpoints[i], p1.ypoints[i]);
 //            g.drawOval(cood.x - 3, cood.y - 3, 6, 6);

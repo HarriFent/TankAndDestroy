@@ -104,7 +104,8 @@ public enum SpriteList {
     menuNumber_7(894, 351, 30, 35),
     menuNumber_8(924, 351, 30, 35),
     menuNumber_9(954, 351, 30, 35),
-    menuNumber_0(984, 351, 30, 35);
+    menuNumber_0(984, 351, 30, 35),
+    menuGame(862, 400, 114, 35);
 
     private final Rectangle bound;
 

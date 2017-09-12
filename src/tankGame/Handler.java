@@ -34,9 +34,7 @@ public class Handler {
     }
 
     public void clearObjects() {
-        for (int i = 0; i < object.size(); i++) {
-            object = new LinkedList<GameObject>();
-        }
+        object = new LinkedList<GameObject>();
     }
 
     private void orderObjects() {

@@ -1,2 +1,0 @@
-tankGame.Button
-tankGame.Menu

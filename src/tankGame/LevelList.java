@@ -66,6 +66,7 @@ public enum LevelList {
             300, 344, ID.SANDBAG, 0.0,
             300, 388, ID.SANDBAG, 0.0,
             300, 432, ID.SANDBAG, 0.0,
+            500, 350, ID.ENEMY_STILL, 0.0,
             100, 100, ID.PLAYER, 135.0),
     level1(2, 0, ID.BACKGROUND, 0.0,
             0, 0, ID.SANDBAG, 0.0,
@@ -157,6 +158,12 @@ public enum LevelList {
                     Player player = new Player(x, y, id, game);
                     player.setAngle(angle);
                     game.handler.addObject(player);
+                    break;
+                case ENEMY_STILL:
+                    EnemyStill enemy_still = new EnemyStill(x, y, id, game);
+                    enemy_still.setAngle(Math.random()*3.1416);
+                    game.handler.addObject(enemy_still);
+                    game.enemyCount ++;
                     break;
                 default:
                     System.out.println(id);
