@@ -129,7 +129,7 @@ public enum LevelList {
             366, 300, ID.SANDBAG, 0.0,
             432, 300, ID.SANDBAG2, 0.0,
             498, 300, ID.SANDBAG2, 0.0,
-            100, 100, ID.PLAYER, 0.0);
+            100, 100, ID.PLAYER, 135.0);
 
     private final Object[] level;
 
@@ -137,6 +137,20 @@ public enum LevelList {
         this.level = level;
     }
 
+    public void reloadPlayer(TankGame game) {
+        for (int i = 0; i < level.length / 4; i++) {
+            int index = i * 4;
+            ID id = (ID) level[index + 2];
+            if (id == ID.PLAYER) {
+                int x = (int) level[index];
+                int y = (int) level[index + 1];
+                double angle = Math.toRadians((double) level[index + 3]);
+                Player player = new Player(x, y, angle, id, game);
+                game.handler.addObject(player);
+            }
+        }
+    }
+    
     public void loadGameObjects(TankGame game) {
         for (int i = 0; i < level.length / 4; i++) {
             int index = i * 4;
@@ -155,8 +169,7 @@ public enum LevelList {
                     game.handler.addObject(new Background(x, y, id, game));
                     break;
                 case PLAYER:
-                    Player player = new Player(x, y, id, game);
-                    player.setAngle(angle);
+                    Player player = new Player(x, y, angle, id, game);
                     game.handler.addObject(player);
                     break;
                 case ENEMY_STILL:

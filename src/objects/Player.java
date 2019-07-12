@@ -19,11 +19,12 @@ public class Player extends GameObject {
     int shootCountDown = 0;
     private AffineTransform tx;
 
-    public Player(int x, int y, ID id, TankGame game) {
+    public Player(int x, int y, double angle, ID id, TankGame game) {
         super(x, y, id, game);
         w = (int) (SpriteList.tankGreen_outline.getw() * 0.7);
         h = (int) (SpriteList.tankGreen_outline.geth() * 0.7);
         barrelAngle = Math.toRadians(0);
+        this.angle = angle;
     }
 
     @Override
@@ -61,7 +62,7 @@ public class Player extends GameObject {
                     game.handler.addObject(esmoke);
                     game.handler.removeObject(obj);
                     game.handler.removeObject(this);
-                    game.handler.addObject(new Player(100, 100, ID.PLAYER, game));
+                    
                     return;
                 }
             }
